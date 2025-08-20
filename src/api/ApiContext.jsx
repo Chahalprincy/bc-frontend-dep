@@ -2,7 +2,13 @@ import { createContext, useContext, useState } from "react";
 
 import { useAuth } from "../auth/AuthContext";
 
-export const API = (import.meta.env.VITE_API_URL || "http://localhost:3000").replace(/\/$/, "");
+export const API = (() => {
+  let base = "http://localhost:3000";
+  try {
+    if (import.meta?.env?.VITE_API_URL) base = import.meta.env.VITE_API_URL;
+  } catch { /* running in a non-Vite tool */ }
+  return base.replace(/\/$/, "");
+})();
 
 const ApiContext = createContext();
 
