@@ -3,6 +3,7 @@ import axios from "axios";
 import NewsItems from "./NewsItems";
 import { FaSearch } from "react-icons/fa";
 import "../styles/pages/news.css";
+import { API_BASE } from "../api/config";
 
 export default function News() {
   const categories = [
@@ -39,9 +40,9 @@ export default function News() {
 
     // let React render the loading state
     await new Promise((resolve) => setTimeout(resolve, 0));
-
+  
     try {
-      const res = await axios.get("http://localhost:3000/daily/news", {
+      const res = await axios.get(`${API_BASE}/daily/news`, {
         params: { q: searchTerm, pageSize: 50 },
       });
 

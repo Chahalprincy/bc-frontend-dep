@@ -7,10 +7,8 @@ import useSavedLocations from "../../hooks/useSavedLocations";
 import "../../styles/pages/weather/weather-page.css";
 import "../../styles/pages/weather/weather-hud.css";
 import "../../styles/pages/weather/saved-locations.css";
+import { API_BASE } from "../../api/config";
 
-
-
-const API_BASE = ("http://localhost:3000").replace(/\/$/, "");
 
 const WMO = {
   0:"sun",1:"sun",2:"cloudSun",3:"cloud",
@@ -25,6 +23,14 @@ const WMO = {
   95:"storm",96:"storm",99:"storm",
 };
 const codeToIcon = (c) => WMO[c] || "cloud";
+
+const buildWeatherUrl = (params) => {
+  const u = new URL("/daily/weather", API_BASE);
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null) u.searchParams.set(k, v);
+  });
+  return u.toString();
+};
 
 function moodFromData(dataset) {
   const curIcon = codeToIcon(dataset?.current?.weather_code);
@@ -93,7 +99,10 @@ export default function UserWeather() {
         if (x.t && Date.now() - (x.tUpdatedAt || 0) < FRESH_MS) continue;
 
         try {
-          const r = await fetch(`${API_BASE}/daily/weather?lat=${x.lat}&lon=${x.lon}`);
+          const r = await fetch(
+            buildWeatherUrl({ lat: x.lat, lon: x.lon, units }),
+            { headers: { Accept: "application/json" } }
+          );
           if (!r.ok) continue;
           const j = await r.json();
           const t = tFrom(j);
@@ -115,8 +124,11 @@ export default function UserWeather() {
     setErrorSearch("");
     setData(null);
     try {
-      const url = `${API_BASE}/daily/weather?lat=${p.latitude}&lon=${p.longitude}&units=${units}`;
-      const res = await fetch(url);
+      const res = await fetch(
+        buildWeatherUrl({ lat: p.latitude, lon: p.longitude, units }),
+        { headers: { Accept: "application/json" } }
+      );
+      
       if (!res.ok) throw new Error(await res.text());
       const json = await res.json();
       setData(json);

@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/pages/stocks.css";
 import { FiStar, FiX, FiPlus } from "react-icons/fi";
+import { API_BASE } from "../api/config";
 
-const API_BASE = "http://localhost:3000";
+const STOCKS_BASE = `${API_BASE}/daily/stocks`;
 const DEFAULT_SYMBOLS = "AAPL,GOOGL,MSFT,AMZN,TSLA,NVDA,META";
 
 export default function Stocks() {
@@ -56,7 +57,7 @@ export default function Stocks() {
     try {
       const symbols = customSymbols || DEFAULT_SYMBOLS;
       const response = await axios.get(
-        `${API_BASE}/daily/stocks?symbols=${symbols}`
+        `${STOCKS_BASE}?symbols=${encodeURIComponent(symbols)}`
       );
       setStocksData(response.data);
     } catch (err) {
@@ -76,7 +77,7 @@ export default function Stocks() {
     setIsSearching(true);
     try {
       const response = await axios.get(
-        `${API_BASE}/daily/stocks/search?q=${encodeURIComponent(query)}`
+        `${STOCKS_BASE}/search?q=${encodeURIComponent(query)}`
       );
       setSearchResults(response.data);
     } catch (err) {
@@ -90,7 +91,7 @@ export default function Stocks() {
   // Add stock to watchlist
   const addStockToWatchlist = async (symbol) => {
     try {
-      const response = await axios.get(`${API_BASE}/daily/stocks/${symbol}`);
+      const response = await axios.get(`${STOCKS_BASE}/${encodeURIComponent(symbol)}`);
       const newStock = response.data;
 
       setStocksData((prevStocks) => {

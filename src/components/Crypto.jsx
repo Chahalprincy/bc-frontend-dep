@@ -157,6 +157,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import "../styles/pages/crypto.css";
 import { FiArrowUpRight, FiArrowDown } from "react-icons/fi";
+import { API_BASE } from "../api/config";
 
 function Crypto() {
   const [data, setData] = useState([]);
@@ -164,8 +165,8 @@ function Crypto() {
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true); // 👈 loading state
 
-  const URL = "http://localhost:3000/daily/crypto";
-
+  const URL = `${API_BASE}/daily/crypto`;
+  
   // Fetch crypto data
   useEffect(() => {
     axios

@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import "../styles/pages/exchange.css";
+import { API_BASE } from "../api/config";
+const BASE_RATES_URL = `${API_BASE}/daily/exchange`;
+const CODES_URL = `${API_BASE}/daily/exchange/currency-codes`;
 
-const BASE_RATES_URL = "http://localhost:3000/daily/exchange";
-const CODES_URL = "http://localhost:3000/daily/exchange/currency-codes";
+// const BASE_RATES_URL = "http://localhost:3000/daily/exchange";
+// const CODES_URL = "http://localhost:3000/daily/exchange/currency-codes";
 
 export default function Exchange() {
   const [rates, setRates] = useState([]);
